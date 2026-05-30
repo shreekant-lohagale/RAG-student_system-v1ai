@@ -1,0 +1,173 @@
+PCET’s
+Pimpri Chinchwad University, Pune
+Department of Artificial Intelligence and Machine Learning
+Mini Project Report :
+Loan Approval Prediction using Big Data Techniques
+Submitted By :
+Student Name	Roll No
+TEJASWINI SUMAN	MLTB26
+ABHINAV KASHYAP	MLTB27
+BORASE OM MADHUKAR	MLTB28
+ANPAT YASH JAYWANT	MLTB29
+NAVALE PRATHAMESH RAJENDRA	MLTB30
+1.0	Objective :
+The main objective of this project is to develop a predictive system that determines whether a loan application should be approved or rejected. This is achieved using machine learning techniques and data analysis. The project focuses on utilizing large datasets and extracting meaningful insights to improve decision-making processes. It aims to reduce manual effort, minimize errors, and provide fast and accurate results.
+2.0	Aim :
+The aim of this project is to design and implement a system that uses historical loan data to predict approval status. The system analyzes various applicant features such as income, credit history, and loan amount. It provides an automated solution that ensures consistency and efficiency in the loan approval process.
+3.0	Introduction :
+In In today’s digital era, financial institutions deal with massive amounts of data daily. Processing this data manually is inefficient and time-consuming. Big Data technologies and machine learning algorithms provide powerful solutions to handle such large-scale data.
+Loan approval is a crucial task that requires careful analysis of applicant details. This project demonstrates how data-driven approaches can be used to automate this process. By analyzing past records, the system learns patterns and predicts future outcomes.
+4.0	Problem Statement:
+Banks and financial institutions face challenges such as:
+•	Large number of loan applications
+•	Time-consuming manual verification
+•	Risk of human errors
+•	Inconsistent decision-making
+This project aims to solve these problems by developing an automated loan prediction system.
+
+5.0	Literature Review :
+Machine learning has been widely used in financial applications. Logistic Regression is commonly used for binary classification problems. Support Vector Machines are effective for complex datasets.
+Big Data technologies enable efficient handling of large datasets. Previous studies show that machine learning models improve prediction accuracy and reduce risks in financial decision- making.
+ 
+6.0 Methodology :
+The project follows these steps:
+1.	Data Collection
+The dataset is collected from reliable sources containing applicant details.
+2.	Data Preprocessing
+•	Handling missing values
+•	Converting categorical data into numerical form
+3.	Exploratory Data Analysis
+Understanding relationships between variables using graphs and statistics.
+4.	Model Building
+Using algorithms like:
+•	Logistic Regression
+•	Support Vector Machine
+5.	Model Evaluation
+Evaluating performance using accuracy and confusion matrix.
+
+7.0	System Architecture :
+
+Fig 01 : System Archiecture
+ 
+8.0	Tools and Technologies Used :
+•	Python
+•	Pandas
+•	NumPy
+•	Matplotlib
+•	Seaborn
+•	Scikit-learn
+
+9.0	Implementation :
+The implementation of the Loan Approval Prediction system is carried out using Python and various data analysis and machine learning libraries. The process involves several stages, from data preprocessing to final prediction.
+9.1	Data Loading
+The dataset is imported using the Pandas library in CSV format. It contains details such as applicant income, loan amount, credit history, and loan status. Initial inspection is done to understand the structure of the dataset.
+9.2	Data Preprocessing
+Data preprocessing ensures the dataset is clean and suitable for model training.
+•	Missing values are handled using mean, median, or mode
+•	Categorical data (e.g., Gender, Married) is converted into numerical form using encoding
+•	Irrelevant columns like Loan_ID are removed
+•	Important features are selected for analysis
+9.3	Exploratory Data Analysis (EDA)
+EDA is performed to understand the relationship between variables.
+•	Graphs such as count plots and heatmaps are used
+•	Credit history is found to be a key factor in loan approval
+•	Higher income increases chances of approval
+This step helps in identifying the most important features.
+9.4	Model Building
+Two machine learning models are used:
+•	Logistic Regression – suitable for binary classification
+•	Support Vector Machine (SVM) – effective for complex data
+The dataset is divided into training and testing sets. The models are trained using the training data and tested for accuracy.
+ 
+9.5	Model Evaluation
+Model performance is evaluated using:
+•	Accuracy Score – measures correctness of predictions
+•	Confusion Matrix – shows prediction errors
+Both models provide satisfactory results, with Logistic Regression giving stable performance.
+9.6	Prediction System
+A prediction function is developed where users can input their details such as income, loan amount, and credit history. Based on these inputs, the system predicts whether the loan will be approved or not.
+10.0	Results :
+The performance of the machine learning models was evaluated using accuracy scores and confusion matrices.
+Logistic Regression Results
+•	Accuracy: 1.0 (100%)
+•	Confusion Matrix:
+[[8 0]
+[0 52]]
+The Logistic Regression model achieved perfect accuracy, correctly classifying all instances in the test dataset. There were no false positives or false negatives, indicating excellent performance.
+
+Support Vector Machine (SVM) Results
+•	Accuracy: 0.8667 (86.67%)
+•	Confusion Matrix:
+[[0 8]
+[0 52]]
+The SVM model achieved an accuracy of approximately 86.67%. While it correctly predicted most of the cases, it failed to classify some instances accurately, leading to lower performance compared to Logistic Regression.
+Model Comparison
+
+Model	Accuracy
+Logistic Regression	1.00
+SVM	0.8667
+ 
+From the comparison, Logistic Regression outperformed SVM in this project. It provided higher accuracy and better classification results. Therefore, Logistic Regression is considered the more suitable model for this dataset.
+
+11.0	Conclusions :
+This project demonstrates how Big Data and machine learning techniques can automate loan approval prediction. The system improves efficiency, accuracy, and decision-making. It highlights the importance of data-driven approaches in modern financial systems.
+
+***
+ 
+Loan Approval Prediction
+0	LP000001	Male	Yes	0 Graduate	No
+1	LP000002	Female	Yes	0 Graduate	Yes
+2	LP000003	Female	Yes	0 Graduate	Yes
+3	LP000004	Male	Yes	0 Graduate	No
+4	LP000005	Male	No	0 Graduate	No
+Credit_History Property_Area Loan_Status
+0	1.0	Urban	Y
+1	1.0	Semiurban	Y
+2	1.0	Urban	Y
+3	0.0	Urban	N
+4	1.0	Rural	Y
+# ================================
+# 2. Data Preprocessing
+# ================================
+# Fill missing values
+df.fillna({
+'Gender': df['Gender'].mode()[0],
+'Married': df['Married'].mode()[0],
+'Dependents': df['Dependents'].mode()[0], 'Self_Employed': df['Self_Employed'].mode()[0], 'LoanAmount': df['LoanAmount'].median(), 'Loan_Amount_Term': df['Loan_Amount_Term'].median(), 'Credit_History': df['Credit_History'].mode()[0]
+}, inplace=True)
+# Convert categorical to numeric
+le = LabelEncoder()
+columns = ['Gender', 'Married', 'Dependents', 'Education', 'Self_Employed', 'Property_Area', 'Loan_Status']
+for col in columns:
+df[col] = le.fit_transform(df[col])
+# Drop Loan_ID (not useful)
+df.drop('Loan_ID', axis=1, inplace=True)
+# ================================
+# 3. Exploratory Data Analysis
+# ================================
+plt.figure(figsize=(6,4)) sns.countplot(x='Loan_Status', data=df) plt.title("Loan Approval Count") plt.show()
+plt.figure(figsize=(6,4))
+sns.countplot(x='Credit_History', hue='Loan_Status', data=df) plt.title("Credit History vs Loan Status")
+plt.show()
+plt.figure(figsize=(8,5))
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm') plt.title("Feature Correlation")
+plt.show()
+# ================================
+# 6. Logistic Regression Model
+# ================================
+log_model = LogisticRegression(max_iter=100) log_model.fit(X_train, y_train)
+y_pred_log = log_model.predict(X_test)
+log_acc = accuracy_score(y_test, y_pred_log) print("\nLogistic Regression Accuracy:", log_acc)
+print("\nConfusion Matrix (Logistic):") print(confusion_matrix(y_test, y_pred_log))
+Logistic Regression Accuracy: 1.0
+Confusion Matrix (Logistic):
+[[ 8 0]
+ [ 0 52]]
+c:\Users\iiiaamnooob\AppData\Local\Programs\Python\Python313\Lib\site- packages\sklearn\linear_model\_logistic.py:473: ConvergenceWarning: lbfgs failed to converge after 100 iteration(s) (status=1):
+STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT
+Increase the number of iterations to improve the convergence (max_iter=100).
+You might also want to scale the data as shown in:
+	https://scikit-learn.org/stable/modules/preprocessing.html
+Please also refer to the documentation for alternative solver options:
+https://scikit-learn.org/stable/modules/linear_model.html#logistic- regression
+	n_iter_i = _check_optimize_result(
