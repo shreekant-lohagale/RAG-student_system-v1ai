@@ -28,5 +28,13 @@ results = vectorstore.similarity_search(
     k=2
 )
 
-for doc in results:
-    print(doc.page_content)
+for r in results:
+    print(r.page_content)
+    print(r.metadata)
+
+retriever = vectorstore.as_retriever()
+docs = retriever.invoke("Explain deep learning.")
+
+for d in docs:
+    print(d.page_content)
+    print(d.metadata)
