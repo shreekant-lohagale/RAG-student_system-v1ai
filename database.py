@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 loader = PyPDFLoader("D:/Gen AI-project1/document loaders/Third Year -AIML_Syllabus.pdf")
+loader = PyPDFLoader("D:/Gen AI-project1/document loaders/Deep+Learning+Ian+Goodfellow.pdf")
 docs = loader.load()
 
 splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
