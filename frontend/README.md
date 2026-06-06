@@ -1,16 +1,34 @@
-# React + Vite
+# React + Tailwind CSS Web Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This directory houses the user-facing web dashboard for **Lumina Academic AI**, styled with modern glassmorphism components and Outfit/Inter typography.
 
-Currently, two official plugins are available:
+## 🚀 Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Installation
+Install standard React packages and dev dependencies (TailwindCSS, Lucide, React Markdown):
+```powershell
+cd frontend
+npm install
+```
 
-## React Compiler
+### Running the App
+Start the Vite development server locally:
+```powershell
+npm run dev
+```
+*   **Vite URL**: `http://localhost:5173/`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Build for Production
+Compiles the application assets into a compact, optimized production bundle inside the `dist/` directory:
+```powershell
+npm run build
+```
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🎨 Design Systems & Components
+
+- **Main Dashboard**: Located in [App.jsx](file:///d:/Gen%20AI-project1/frontend/src/App.jsx). Manages message histories, API connection indicators, and sliding panels.
+- **Glassmorphism Helpers**: Written in [index.css](file:///d:/Gen%20AI-project1/frontend/src/index.css), facilitating blur borders (`glass`), card transitions (`glass-interactive`), and custom text alignments.
+- **Citations Drawer**: Collapsible right drawer presenting document snippets, page alignments, and document classifications retrieved from the vector store.
+- **Tailwind Config**: Stored in [tailwind.config.js](file:///d:/Gen%20AI-project1/frontend/tailwind.config.js). Extends animation properties and lists compile target directories.
