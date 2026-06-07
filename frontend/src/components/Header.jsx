@@ -1,38 +1,84 @@
 import React from 'react'
-import { Menu, Search } from 'lucide-react'
+import { Menu, Search, LayoutGrid, Layers } from 'lucide-react'
 
-export default function Header({ isSidebarOpen, setIsSidebarOpen, searchQuery, setSearchQuery }) {
+export default function Header({ isSidebarOpen, setIsSidebarOpen, searchQuery, setSearchQuery, themeAccent, setThemeAccent }) {
+  const accentClasses = {
+    purple: 'text-purple-400 border-purple-500/20 bg-purple-500/10',
+    emerald: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10',
+    amber: 'text-amber-400 border-amber-500/20 bg-amber-500/10'
+  }
+
   return (
-    <header className="h-16 border-b border-slate-800/50 flex items-center justify-between px-6 bg-slate-950/80 backdrop-blur-md shrink-0">
+    <header className="h-16 border-b border-slate-900 flex items-center justify-between px-6 bg-slate-950/40 backdrop-blur-xl shrink-0 z-10">
       <div className="flex items-center gap-4">
         {!isSidebarOpen && (
           <button 
             onClick={() => setIsSidebarOpen(true)}
-            className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-850 hover:text-purple-400 transition-all"
+            className="p-2 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:bg-slate-900 hover:text-purple-400 hover:border-purple-500/30 transition-all shadow-md active:scale-95"
           >
             <Menu className="w-4 h-4" />
           </button>
         )}
-        <div>
-          <h1 className="text-lg font-bold text-slate-100 font-heading tracking-wide flex items-center gap-2">
-            Lumina Workspace 
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/25 text-purple-400 font-medium tracking-normal">
-              RAG Assistant
-            </span>
-          </h1>
+        
+        <div className="flex items-center gap-2.5">
+          <div className="hidden xs:flex items-center gap-1">
+            <LayoutGrid className={`w-4 h-4 ${themeAccent === 'emerald' ? 'text-emerald-400' : themeAccent === 'amber' ? 'text-amber-400' : 'text-purple-400'}`} />
+          </div>
+          <div>
+            <h1 className="text-base font-bold text-slate-100 font-heading tracking-wide flex items-center gap-2">
+              Lumina Workspace 
+              <span className={`text-[9px] font-mono px-2 py-0.5 rounded-full border tracking-normal font-semibold uppercase ${accentClasses[themeAccent] || accentClasses['purple']}`}>
+                {themeAccent} Engine
+              </span>
+            </h1>
+          </div>
         </div>
       </div>
 
-      {/* Search bar inside header */}
-      <div className="relative w-64 hidden sm:block">
-        <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
-        <input 
-          type="text"
-          placeholder="Search chat history..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-slate-900/60 border border-slate-800/80 rounded-xl py-1.5 pl-9 pr-4 text-xs text-slate-300 placeholder-slate-500 focus:outline-none focus:border-purple-500/50 transition-colors"
-        />
+      {/* Right Controls: Search & Accent Changer */}
+      <div className="flex items-center gap-4">
+        {/* Search bar inside header */}
+        <div className="relative w-56 hidden sm:block">
+          <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input 
+            type="text"
+            placeholder="Search matching discussions..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-slate-900/50 border border-slate-900 rounded-xl py-1.5 pl-9 pr-4 text-xs text-slate-300 placeholder-slate-500 focus:outline-none focus:border-slate-800 focus:bg-slate-900/80 focus:ring-1 focus:ring-slate-800 transition-all"
+          />
+        </div>
+
+        {/* Accent Selector */}
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-900/40 border border-slate-900/60 backdrop-blur-md">
+          <button
+            onClick={() => setThemeAccent('purple')}
+            className={`w-4 h-4 rounded-full transition-all ${
+              themeAccent === 'purple' 
+                ? 'bg-purple-500 ring-2 ring-purple-300 ring-offset-2 ring-offset-slate-950 scale-110' 
+                : 'bg-purple-950 hover:bg-purple-900'
+            }`}
+            title="Purple Accents"
+          />
+          <button
+            onClick={() => setThemeAccent('emerald')}
+            className={`w-4 h-4 rounded-full transition-all ${
+              themeAccent === 'emerald' 
+                ? 'bg-emerald-500 ring-2 ring-emerald-300 ring-offset-2 ring-offset-slate-950 scale-110' 
+                : 'bg-emerald-950 hover:bg-emerald-900'
+            }`}
+            title="Emerald Accents"
+          />
+          <button
+            onClick={() => setThemeAccent('amber')}
+            className={`w-4 h-4 rounded-full transition-all ${
+              themeAccent === 'amber' 
+                ? 'bg-amber-500 ring-2 ring-amber-300 ring-offset-2 ring-offset-slate-950 scale-110' 
+                : 'bg-amber-950 hover:bg-amber-900'
+            }`}
+            title="Amber Accents"
+          />
+        </div>
       </div>
     </header>
   )

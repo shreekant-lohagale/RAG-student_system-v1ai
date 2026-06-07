@@ -10,11 +10,13 @@
     padding: 0;
     height: 100%;
     width: 100%;
+    overflow: hidden;
+    background-color: #020617;
   }
 
   body {
     font-family: 'Inter', sans-serif;
-    @apply bg-slate-950 text-slate-100 antialiased selection:bg-purple-500/30 selection:text-purple-200 overflow-x-hidden;
+    @apply text-slate-100 antialiased selection:bg-purple-500/30 selection:text-purple-200;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -22,54 +24,121 @@
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.15);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.3);
+/* Moving ambient gradient mesh keyframes */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
 }
 
-/* Custom styling for glassmorphism effects */
-.glass {
-  background: rgba(15, 23, 42, 0.65);
+@keyframes float-medium {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(-40px, 40px) scale(1.15);
+  }
+}
+
+.animate-glow-1 {
+  animation: float-slow 15s infinite ease-in-out;
+}
+
+.animate-glow-2 {
+  animation: float-medium 18s infinite ease-in-out;
+}
+
+/* Glassmorphism system */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel-interactive {
+  background: rgba(30, 41, 59, 0.25);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.glass-interactive {
+.glass-panel-interactive:hover {
   background: rgba(30, 41, 59, 0.45);
+  border-color: rgba(168, 85, 247, 0.35);
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.12);
+  transform: translateY(-2px);
+}
+
+.glass-input {
+  background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.2s ease;
 }
 
-.glass-interactive:hover {
-  background: rgba(30, 41, 59, 0.75);
-  border-color: rgba(168, 85, 247, 0.4);
+.glass-input:focus {
+  border-color: rgba(168, 85, 247, 0.5);
   box-shadow: 0 0 15px rgba(168, 85, 247, 0.15);
 }
 
-/* Typing animation dot bounce */
-@keyframes bounce-custom {
+/* Text Gradients */
+.text-glow-purple {
+  background: linear-gradient(135deg, #c084fc 0%, #a855f7 50%, #818cf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-glow-cyan {
+  background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Typing indicator custom bounce */
+@keyframes dot-bounce-key {
   0%, 100% {
     transform: translateY(0);
+    opacity: 0.3;
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
+    opacity: 1;
   }
 }
 
-.dot-bounce {
-  animation: bounce-custom 1s infinite ease-in-out;
+.dot-pulse {
+  animation: dot-bounce-key 1.2s infinite ease-in-out;
+}
+
+/* Citations score progress bar */
+.progress-bar-fill {
+  background: linear-gradient(90deg, #a855f7 0%, #06b6d4 100%);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.1);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.3);
 }
