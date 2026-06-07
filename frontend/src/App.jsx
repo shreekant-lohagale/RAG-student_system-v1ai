@@ -4,6 +4,7 @@ import './App.css'
 
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
+import WelcomeCard from './components/WelcomeCard'
 import QuickQuestions from './components/QuickQuestions'
 import ChatMessage from './components/ChatMessage'
 import ChatInput from './components/ChatInput'
@@ -12,14 +13,7 @@ import CitationsDrawer from './components/CitationsDrawer'
 const BACKEND_URL = 'http://127.0.0.1:8000'
 
 function App() {
-  const [messages, setMessages] = useState([
-    {
-      id: 'welcome',
-      role: 'assistant',
-      content: "Hello! I am **Lumina Academic AI**, your specialized research assistant. I have indexed your academic syllabus and Ian Goodfellow's **Deep Learning** textbook. \n\nAsk me anything about these materials and I'll retrieve the exact information with sources.",
-      sources: []
-    }
-  ])
+  const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [backendStatus, setBackendStatus] = useState('checking')
@@ -40,7 +34,9 @@ function App() {
   }
 
   useEffect(() => {
-    scrollToBottom()
+    if (messages.length > 0) {
+      scrollToBottom()
+    }
   }, [messages, isLoading])
 
   // Check Backend Status on load
@@ -107,13 +103,10 @@ function App() {
         }
       ])
 
-      // Auto-select and show sources if present
+      // Store matching sources
       if (data.sources && data.sources.length > 0) {
         setActiveSources(data.sources)
         setSelectedMessageId(aiMessageId)
-        setIsCitationsOpen(true)
-      } else {
-        setIsCitationsOpen(false)
       }
     } catch (error) {
       setMessages(prev => [
@@ -142,20 +135,6 @@ function App() {
     handleSend(text)
   }
 
-  const handleClearHistory = () => {
-    setMessages([
-      {
-        id: 'welcome',
-        role: 'assistant',
-        content: "Hello! I am **Lumina Academic AI**, your specialized research assistant. I have indexed your academic syllabus and Ian Goodfellow's **Deep Learning** textbook. \n\nAsk me anything about these materials and I'll retrieve the exact information with sources.",
-        sources: []
-      }
-    ])
-    setIsCitationsOpen(false)
-    setActiveSources([])
-    setSelectedMessageId(null)
-  }
-
   // Filter messages if search query exists
   const filteredMessages = messages.filter(msg => 
     searchQuery === '' || msg.content.toLowerCase().includes(searchQuery.toLowerCase())
@@ -165,25 +144,22 @@ function App() {
   const glowClasses = {
     purple: {
       sphere1: 'bg-purple-900/10',
-      sphere2: 'bg-blue-900/10',
-      borderPulse: 'border-purple-500/20'
+      sphere2: 'bg-blue-900/10'
     },
     emerald: {
       sphere1: 'bg-emerald-900/10',
-      sphere2: 'bg-teal-900/10',
-      borderPulse: 'border-emerald-500/20'
+      sphere2: 'bg-teal-900/10'
     },
     amber: {
       sphere1: 'bg-amber-900/10',
-      sphere2: 'bg-orange-900/10',
-      borderPulse: 'border-amber-500/20'
+      sphere2: 'bg-orange-900/10'
     }
   }
 
   const currentGlows = glowClasses[themeAccent] || glowClasses['purple']
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#02040a] text-slate-100 font-sans relative">
+    <div className="fixed inset-0 flex overflow-hidden bg-[#030712] text-slate-100 font-sans z-50">
       
       {/* BACKGROUND MESH GRADIENT EFFECTS */}
       <div className={`absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full ${currentGlows.sphere1} blur-[120px] pointer-events-none animate-glow-1`} />
@@ -197,7 +173,7 @@ function App() {
       />
 
       {/* MAIN CHAT INTERFACE CONTAINER */}
-      <div className="flex-1 flex flex-col h-full relative z-10 overflow-hidden bg-slate-950/20">
+      <div className="flex-1 flex flex-col h-full relative z-10 overflow-hidden bg-slate-950/20 hero-glow">
         
         {/* Chat Header */}
         <Header 
@@ -211,14 +187,10 @@ function App() {
 
         {/* Scrollable Messages Pane */}
         <main className="flex-1 overflow-y-auto px-4 py-8 md:px-8 space-y-6">
-          {filteredMessages.length === 1 && (
-            <div className="max-w-3xl mx-auto mb-8 text-center mt-6">
-              <h2 className="text-3xl font-extrabold font-heading text-slate-100 mb-2 tracking-tight">
-                How can I assist your study today?
-              </h2>
-              <p className="text-slate-400 text-xs max-w-md mx-auto leading-relaxed">
-                Query local indexed curriculum guidelines and Deep Learning texts. Select questions or enter custom searches.
-              </p>
+          {filteredMessages.length === 0 ? (
+            <div className="max-w-3xl mx-auto flex flex-col justify-center h-full min-h-[70vh]">
+              {/* Welcome Card */}
+              <WelcomeCard />
               
               {/* Quick Questions Grid */}
               <QuickQuestions 
@@ -226,36 +198,36 @@ function App() {
                 themeAccent={themeAccent}
               />
             </div>
+          ) : (
+            /* Render Conversation Messages */
+            <div className="max-w-3xl mx-auto space-y-6">
+              {filteredMessages.map((msg) => (
+                <ChatMessage 
+                  key={msg.id}
+                  msg={msg}
+                  selectedMessageId={selectedMessageId}
+                  onMessageClick={handleMessageClick}
+                  themeAccent={themeAccent}
+                />
+              ))}
+
+              {/* AI Typing Indicator */}
+              {isLoading && (
+                <div className="flex gap-4 items-start justify-start">
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 shadow-md ${themeAccent === 'emerald' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/25' : themeAccent === 'amber' ? 'text-amber-400 bg-amber-500/10 border-amber-500/25' : 'text-purple-400 bg-purple-500/10 border-purple-500/25'}`}>
+                    <Bot className="w-5 h-5" />
+                  </div>
+                  <div className="glass-panel border border-white/[0.08] rounded-3xl rounded-tl-none px-5 py-4 flex items-center gap-1.5 bg-slate-900/10">
+                    <span className={`w-2 h-2 rounded-full dot-pulse ${themeAccent === 'emerald' ? 'bg-emerald-500' : themeAccent === 'amber' ? 'bg-amber-500' : 'bg-purple-500'}`} style={{ animationDelay: '0ms' }} />
+                    <span className={`w-2 h-2 rounded-full dot-pulse ${themeAccent === 'emerald' ? 'bg-emerald-500' : themeAccent === 'amber' ? 'bg-amber-500' : 'bg-purple-500'}`} style={{ animationDelay: '200ms' }} />
+                    <span className={`w-2 h-2 rounded-full dot-pulse ${themeAccent === 'emerald' ? 'bg-emerald-500' : themeAccent === 'amber' ? 'bg-amber-500' : 'bg-purple-500'}`} style={{ animationDelay: '400ms' }} />
+                  </div>
+                </div>
+              )}
+              
+              <div ref={messagesEndRef} />
+            </div>
           )}
-
-          {/* Render Messages */}
-          <div className="max-w-3xl mx-auto space-y-6">
-            {filteredMessages.map((msg) => (
-              <ChatMessage 
-                key={msg.id}
-                msg={msg}
-                selectedMessageId={selectedMessageId}
-                onMessageClick={handleMessageClick}
-                themeAccent={themeAccent}
-              />
-            ))}
-
-            {/* AI Typing Indicator */}
-            {isLoading && (
-              <div className="flex gap-4 items-start justify-start">
-                <div className={`w-9.5 h-9.5 rounded-xl bg-gradient-to-tr ${themeAccent === 'emerald' ? 'from-emerald-600 to-teal-600' : themeAccent === 'amber' ? 'from-amber-600 to-orange-600' : 'from-purple-600 to-indigo-600'} flex items-center justify-center shrink-0 border border-white/10`}>
-                  <Bot className="w-5 h-5 text-white" />
-                </div>
-                <div className="glass-panel border border-slate-900 rounded-2xl rounded-tl-none px-5 py-4 flex items-center gap-1.5 bg-slate-900/10">
-                  <span className={`w-2 h-2 rounded-full dot-pulse ${themeAccent === 'emerald' ? 'bg-emerald-500' : themeAccent === 'amber' ? 'bg-amber-500' : 'bg-purple-500'}`} style={{ animationDelay: '0ms' }} />
-                  <span className={`w-2 h-2 rounded-full dot-pulse ${themeAccent === 'emerald' ? 'bg-emerald-500' : themeAccent === 'amber' ? 'bg-amber-500' : 'bg-purple-500'}`} style={{ animationDelay: '200ms' }} />
-                  <span className={`w-2 h-2 rounded-full dot-pulse ${themeAccent === 'emerald' ? 'bg-emerald-500' : themeAccent === 'amber' ? 'bg-amber-500' : 'bg-purple-500'}`} style={{ animationDelay: '400ms' }} />
-                </div>
-              </div>
-            )}
-            
-            <div ref={messagesEndRef} />
-          </div>
         </main>
 
         {/* Input area */}
@@ -264,7 +236,6 @@ function App() {
           setInput={setInput}
           onSubmit={handleSend}
           isLoading={isLoading}
-          onClearHistory={handleClearHistory}
           themeAccent={themeAccent}
         />
       </div>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Menu, Search, LayoutGrid, Layers } from 'lucide-react'
+import { Menu, Search, Cpu } from 'lucide-react'
 
 export default function Header({ isSidebarOpen, setIsSidebarOpen, searchQuery, setSearchQuery, themeAccent, setThemeAccent }) {
   const accentClasses = {
@@ -8,13 +8,19 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen, searchQuery, s
     amber: 'text-amber-400 border-amber-500/20 bg-amber-500/10'
   }
 
+  const borderAccents = {
+    purple: 'focus:border-purple-500/40 focus:ring-purple-500/10',
+    emerald: 'focus:border-emerald-500/40 focus:ring-emerald-500/10',
+    amber: 'focus:border-amber-500/40 focus:ring-amber-500/10'
+  }
+
   return (
-    <header className="h-16 border-b border-slate-900 flex items-center justify-between px-6 bg-slate-950/40 backdrop-blur-xl shrink-0 z-10">
+    <header className="h-16 border-b border-white/[0.06] flex items-center justify-between px-6 bg-[#030712]/40 backdrop-blur-xl shrink-0 z-10">
       <div className="flex items-center gap-4">
         {!isSidebarOpen && (
           <button 
             onClick={() => setIsSidebarOpen(true)}
-            className="p-2 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:bg-slate-900 hover:text-purple-400 hover:border-purple-500/30 transition-all shadow-md active:scale-95"
+            className="p-2 rounded-xl bg-slate-900/60 border border-white/[0.08] hover:bg-slate-900 hover:text-purple-400 hover:border-purple-500/30 transition-all shadow-md active:scale-95"
           >
             <Menu className="w-4 h-4" />
           </button>
@@ -22,13 +28,13 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen, searchQuery, s
         
         <div className="flex items-center gap-2.5">
           <div className="hidden xs:flex items-center gap-1">
-            <LayoutGrid className={`w-4 h-4 ${themeAccent === 'emerald' ? 'text-emerald-400' : themeAccent === 'amber' ? 'text-amber-400' : 'text-purple-400'}`} />
+            <Cpu className={`w-4.5 h-4.5 ${themeAccent === 'emerald' ? 'text-emerald-400' : themeAccent === 'amber' ? 'text-amber-400' : 'text-purple-400'}`} />
           </div>
           <div>
-            <h1 className="text-base font-bold text-slate-100 font-heading tracking-wide flex items-center gap-2">
-              Lumina Workspace 
+            <h1 className="text-sm md:text-base font-bold text-slate-100 font-heading tracking-wide flex items-center gap-2">
+              Lumina Knowledge Engine
               <span className={`text-[9px] font-mono px-2 py-0.5 rounded-full border tracking-normal font-semibold uppercase ${accentClasses[themeAccent] || accentClasses['purple']}`}>
-                {themeAccent} Engine
+                Docs: 2 | Chunks: 4470 | Mistral Small
               </span>
             </h1>
           </div>
@@ -45,12 +51,12 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen, searchQuery, s
             placeholder="Search matching discussions..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-slate-900/50 border border-slate-900 rounded-xl py-1.5 pl-9 pr-4 text-xs text-slate-300 placeholder-slate-500 focus:outline-none focus:border-slate-800 focus:bg-slate-900/80 focus:ring-1 focus:ring-slate-800 transition-all"
+            className={`w-full bg-[#0b1120]/60 border border-white/[0.08] rounded-xl py-1.5 pl-9 pr-4 text-xs text-slate-300 placeholder-slate-500 focus:outline-none transition-all ${borderAccents[themeAccent] || borderAccents['purple']}`}
           />
         </div>
 
         {/* Accent Selector */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-900/40 border border-slate-900/60 backdrop-blur-md">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#0b1120] border border-white/[0.08] backdrop-blur-md">
           <button
             onClick={() => setThemeAccent('purple')}
             className={`w-4 h-4 rounded-full transition-all ${

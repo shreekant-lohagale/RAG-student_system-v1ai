@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { Bot, User, BookOpen, Clock, Copy, Check, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { Bot, User, Copy, Check, ThumbsUp, ThumbsDown, FileText } from 'lucide-react'
 
 export default function ChatMessage({ msg, selectedMessageId, onMessageClick, themeAccent }) {
   const [copied, setCopied] = useState(false)
@@ -22,123 +22,119 @@ export default function ChatMessage({ msg, selectedMessageId, onMessageClick, th
     setFeedback(prev => prev === type ? null : type)
   }
 
-  // Accent maps
-  const accentClasses = {
-    purple: {
-      userBubble: 'bg-gradient-to-r from-purple-600 to-indigo-600 border-purple-500/20 text-slate-50',
-      activeBorder: 'border-purple-500 bg-purple-950/5',
-      badge: 'text-purple-400 border-purple-500/20 bg-purple-500/10 hover:border-purple-500/40',
-      iconAccent: 'text-purple-400',
-      avatar: 'from-purple-600 to-indigo-600'
-    },
-    emerald: {
-      userBubble: 'bg-gradient-to-r from-emerald-600 to-teal-600 border-emerald-500/20 text-slate-50',
-      activeBorder: 'border-emerald-500 bg-emerald-950/5',
-      badge: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10 hover:border-emerald-500/40',
-      iconAccent: 'text-emerald-400',
-      avatar: 'from-emerald-600 to-teal-600'
-    },
-    amber: {
-      userBubble: 'bg-gradient-to-r from-amber-600 to-orange-600 border-amber-500/20 text-slate-50',
-      activeBorder: 'border-amber-500 bg-amber-950/5',
-      badge: 'text-amber-400 border-amber-500/20 bg-amber-500/10 hover:border-amber-500/40',
-      iconAccent: 'text-amber-400',
-      avatar: 'from-amber-600 to-orange-600'
-    }
+  // Accent mapping
+  const iconAccents = {
+    purple: 'text-purple-400 bg-purple-500/10 border-purple-500/25',
+    emerald: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/25',
+    amber: 'text-amber-400 bg-amber-500/10 border-amber-500/25'
   }
+  const currentIconAccent = iconAccents[themeAccent] || iconAccents['purple']
 
-  const currentAccent = accentClasses[themeAccent] || accentClasses['purple']
+  const borderAccents = {
+    purple: 'border-purple-500/25 bg-purple-950/[0.04]',
+    emerald: 'border-emerald-500/25 bg-emerald-950/[0.04]',
+    amber: 'border-amber-500/25 bg-amber-950/[0.04]'
+  }
+  const currentBorderAccent = borderAccents[themeAccent] || borderAccents['purple']
 
   return (
-    <div 
-      onClick={() => onMessageClick(msg)}
-      className={`flex gap-4 items-start ${isUser ? 'justify-end' : 'justify-start'} ${
-        hasSources ? 'cursor-pointer group' : ''
-      }`}
-    >
-      {/* Bot Avatar */}
+    <div className={`flex gap-4 items-start w-full animate-fade-in-up ${isUser ? 'justify-end' : 'justify-start'}`}>
+      
+      {/* Bot Avatar Icon */}
       {!isUser && (
-        <div className={`w-9.5 h-9.5 rounded-xl bg-gradient-to-tr ${currentAccent.avatar} flex items-center justify-center shrink-0 border border-white/10 shadow-lg shadow-purple-500/5 animate-fade-in`}>
-          <Bot className="w-5 h-5 text-white" />
+        <div className={`w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 shadow-md ${currentIconAccent}`}>
+          <Bot className="w-5 h-5" />
         </div>
       )}
 
-      {/* Bubble Container */}
-      <div className={`max-w-[85%] rounded-2xl px-5 py-4 shadow-lg transition-all duration-300 ${
+      {/* Bubble Box */}
+      <div className={`flex-1 max-w-[85%] rounded-3xl p-5 shadow-lg border transition-all duration-300 ${
         isUser 
-          ? `${currentAccent.userBubble} border rounded-tr-none` 
-          : `glass-panel border ${isSelected ? currentAccent.activeBorder : 'border-slate-900 hover:border-slate-800/80'} rounded-tl-none relative`
+          ? 'bg-[#0B1120] border-white/[0.08] text-slate-50' 
+          : `bg-[#0B1120] ${isSelected ? currentBorderAccent : 'border-white/[0.08]'}`
       }`}>
-        {/* Assistant Header */}
-        {!isUser && (
-          <div className="flex items-center justify-between mb-2.5 border-b border-slate-900/60 pb-2">
-            <span className={`text-[10px] font-bold uppercase tracking-wider font-heading ${currentAccent.iconAccent}`}>
-              Lumina Assistant
-            </span>
-            {hasSources && (
-              <span className={`text-[9px] px-2.5 py-0.8 rounded-full border transition-all flex items-center gap-1.5 font-semibold ${
-                isSelected ? 'animate-pulse' : ''
-              } ${currentAccent.badge}`}>
-                <BookOpen className="w-3 h-3" />
-                {msg.sources.length} matching citations
+        
+        {/* Bubble Header */}
+        <div className="flex items-center justify-between mb-3.5 border-b border-white/[0.04] pb-2">
+          <div className="flex items-center gap-2">
+            {!isUser ? (
+              <span className={`text-[11px] font-bold uppercase tracking-wider font-heading ${themeAccent === 'emerald' ? 'text-emerald-400' : themeAccent === 'amber' ? 'text-amber-400' : 'text-purple-400'}`}>
+                Lumina AI
+              </span>
+            ) : (
+              <span className="text-[11px] font-bold uppercase tracking-wider font-heading text-slate-400">
+                You
               </span>
             )}
           </div>
-        )}
 
-        {/* Bubble Markdown Text */}
-        <div className="text-sm leading-relaxed text-slate-200 break-words prose prose-invert max-w-none">
-          <ReactMarkdown>{msg.content}</ReactMarkdown>
-        </div>
-
-        {/* Interactive Controls & Citations Indicator */}
-        {!isUser && (
-          <div className="mt-3 border-t border-slate-900/60 pt-2.5 flex items-center justify-between gap-4">
-            {hasSources && !isSelected ? (
-              <div className="text-[10px] text-slate-500 group-hover:text-slate-400 transition-colors flex items-center gap-1">
-                <Clock className="w-3 h-3" />
-                <span>Click card to inspect source paragraphs</span>
-              </div>
-            ) : (
-              <div />
-            )}
-
-            {/* Utility Action Buttons */}
-            <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+          {/* Action controls for assistant responses */}
+          {!isUser && (
+            <div className="flex items-center gap-1.5" onClick={e => e.stopPropagation()}>
               <button 
                 onClick={copyText}
-                className="p-1 rounded hover:bg-slate-900 border border-transparent hover:border-slate-850 text-slate-500 hover:text-slate-300 transition-all"
+                className="p-1 rounded-lg hover:bg-slate-900 border border-transparent hover:border-white/[0.08] text-slate-500 hover:text-slate-300 transition-all"
                 title="Copy response"
               >
                 {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
               </button>
               <button 
                 onClick={(e) => handleFeedback('up', e)}
-                className={`p-1 rounded hover:bg-slate-900 border border-transparent hover:border-slate-850 transition-all ${
+                className={`p-1 rounded-lg hover:bg-slate-900 border border-transparent hover:border-white/[0.08] transition-all ${
                   feedback === 'up' ? 'text-emerald-400' : 'text-slate-500 hover:text-slate-300'
                 }`}
-                title="Upvote answer"
+                title="Upvote response"
               >
                 <ThumbsUp className="w-3.5 h-3.5" />
               </button>
               <button 
                 onClick={(e) => handleFeedback('down', e)}
-                className={`p-1 rounded hover:bg-slate-900 border border-transparent hover:border-slate-850 transition-all ${
+                className={`p-1 rounded-lg hover:bg-slate-900 border border-transparent hover:border-white/[0.08] transition-all ${
                   feedback === 'down' ? 'text-rose-400' : 'text-slate-500 hover:text-slate-300'
                 }`}
-                title="Downvote answer"
+                title="Downvote response"
               >
                 <ThumbsDown className="w-3.5 h-3.5" />
               </button>
+            </div>
+          )}
+        </div>
+
+        {/* Content markdown */}
+        <div className="text-sm leading-relaxed text-slate-200 break-words prose prose-invert max-w-none">
+          <ReactMarkdown>{msg.content}</ReactMarkdown>
+        </div>
+
+        {/* Inline Source citation cards list (Perplexity-style) */}
+        {!isUser && hasSources && (
+          <div className="mt-4 pt-3.5 border-t border-white/[0.04]">
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2.5">
+              Sources:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {msg.sources.map((src, idx) => (
+                <button
+                  key={idx}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onMessageClick(msg) // Opens citations drawer on click
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-950/60 border border-white/[0.06] hover:border-purple-500/25 text-[10px] text-slate-300 hover:text-purple-300 transition-all font-medium group"
+                >
+                  <FileText className="w-3 h-3 text-purple-400 group-hover:scale-105 transition-transform shrink-0" />
+                  <span className="truncate max-w-[120px]">{src.metadata.source}</span>
+                  <span className="text-[9px] text-slate-500 font-mono">Page {src.metadata.page}</span>
+                </button>
+              ))}
             </div>
           </div>
         )}
       </div>
 
-      {/* User Avatar */}
+      {/* User Avatar Icon */}
       {isUser && (
-        <div className="w-9.5 h-9.5 rounded-xl bg-slate-900 border border-slate-850 flex items-center justify-center shrink-0 shadow-lg shadow-slate-950/20">
-          <User className="w-5 h-5 text-slate-300" />
+        <div className="w-9 h-9 rounded-xl flex items-center justify-center border border-white/[0.08] text-slate-400 shrink-0 bg-[#0B1120] shadow-md">
+          <User className="w-5 h-5" />
         </div>
       )}
     </div>
