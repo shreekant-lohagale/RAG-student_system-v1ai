@@ -52,7 +52,7 @@ export default function ChatMessage({ msg, selectedMessageId, onMessageClick, th
   return (
     <div 
       onClick={() => onMessageClick(msg)}
-      className={`flex gap-4 ${isUser ? 'justify-end' : 'justify-start'} ${
+      className={`flex gap-4 items-start ${isUser ? 'justify-end' : 'justify-start'} ${
         hasSources ? 'cursor-pointer group' : ''
       }`}
     >

@@ -183,7 +183,7 @@ function App() {
   const currentGlows = glowClasses[themeAccent] || glowClasses['purple']
 
   return (
-    <div className="flex h-full w-full overflow-hidden bg-[#02040a] text-slate-100 font-sans relative">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#02040a] text-slate-100 font-sans relative">
       
       {/* BACKGROUND MESH GRADIENT EFFECTS */}
       <div className={`absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full ${currentGlows.sphere1} blur-[120px] pointer-events-none animate-glow-1`} />
@@ -242,7 +242,7 @@ function App() {
 
             {/* AI Typing Indicator */}
             {isLoading && (
-              <div className="flex gap-4 justify-start">
+              <div className="flex gap-4 items-start justify-start">
                 <div className={`w-9.5 h-9.5 rounded-xl bg-gradient-to-tr ${themeAccent === 'emerald' ? 'from-emerald-600 to-teal-600' : themeAccent === 'amber' ? 'from-amber-600 to-orange-600' : 'from-purple-600 to-indigo-600'} flex items-center justify-center shrink-0 border border-white/10`}>
                   <Bot className="w-5 h-5 text-white" />
                 </div>
