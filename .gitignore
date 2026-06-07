@@ -47,10 +47,10 @@ ENV/
 # =========================
 # ChromaDB / Vector DB
 # =========================
-chroma_db/
-chromadb/
-vectorstore/
-db/
+# chroma_db/
+# chromadb/
+# vectorstore/
+# db/
 
 # =========================
 # Uploaded Files

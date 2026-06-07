@@ -10,7 +10,7 @@ import ChatMessage from './components/ChatMessage'
 import ChatInput from './components/ChatInput'
 import CitationsDrawer from './components/CitationsDrawer'
 
-const BACKEND_URL = 'http://127.0.0.1:8000'
+const BACKEND_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
 function App() {
   const [messages, setMessages] = useState([])
@@ -26,11 +26,16 @@ function App() {
   // Theme accent state: 'purple' | 'emerald' | 'amber'
   const [themeAccent, setThemeAccent] = useState('purple')
 
-  const messagesEndRef = useRef(null)
+  const scrollContainerRef = useRef(null)
 
   // Scroll to bottom on new messages
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: scrollContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      })
+    }
   }
 
   useEffect(() => {
@@ -186,7 +191,7 @@ function App() {
         />
 
         {/* Scrollable Messages Pane */}
-        <main className="flex-1 overflow-y-auto px-4 py-8 md:px-8 space-y-6">
+        <main ref={scrollContainerRef} className="flex-1 overflow-y-auto px-4 py-8 md:px-8 space-y-6">
           {filteredMessages.length === 0 ? (
             <div className="max-w-3xl mx-auto flex flex-col justify-center h-full min-h-[70vh]">
               {/* Welcome Card */}
@@ -224,8 +229,6 @@ function App() {
                   </div>
                 </div>
               )}
-              
-              <div ref={messagesEndRef} />
             </div>
           )}
         </main>
