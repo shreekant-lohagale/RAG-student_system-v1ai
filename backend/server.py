@@ -9,7 +9,7 @@ from typing import List, Dict, Any
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from dotenv import load_dotenv
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_mistralai import MistralAIEmbeddings
 from langchain_chroma import Chroma
 from langchain_mistralai import ChatMistralAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -28,7 +28,7 @@ app.add_middleware(
 )
 
 # Initialize RAG Components exactly as in main.py
-embedding_model = HuggingFaceEmbeddings()
+embedding_model = MistralAIEmbeddings()
 
 # Locate chroma_db path relative to the root directory
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
