@@ -145,7 +145,7 @@ function App() {
   )
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 font-sans">
+    <div className="flex h-full w-full overflow-hidden bg-slate-950 text-slate-100 font-sans">
       
       {/* BACKGROUND EFFECTS */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-purple-900/10 blur-[120px] pointer-events-none" />

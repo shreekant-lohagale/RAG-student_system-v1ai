@@ -5,6 +5,13 @@
 @tailwind utilities;
 
 @layer base {
+  html, body, #root {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+  }
+
   body {
     font-family: 'Inter', sans-serif;
     @apply bg-slate-950 text-slate-100 antialiased selection:bg-purple-500/30 selection:text-purple-200 overflow-x-hidden;
