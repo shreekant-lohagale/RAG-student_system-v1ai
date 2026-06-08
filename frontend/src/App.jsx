@@ -22,6 +22,8 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [isCitationsOpen, setIsCitationsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [documents, setDocuments] = useState([])
+  const [isUploading, setIsUploading] = useState(false)
   
   // Theme accent state: 'purple' | 'emerald' | 'amber'
   const [themeAccent, setThemeAccent] = useState('purple')
@@ -59,6 +61,72 @@ function App() {
         setBackendStatus('disconnected')
       })
   }, [])
+
+  // Fetch document list when connected
+  useEffect(() => {
+    if (backendStatus === 'connected') {
+      fetch(`${BACKEND_URL}/api/documents`)
+        .then(res => res.json())
+        .then(data => {
+          setDocuments(data.documents || [])
+        })
+        .catch(err => console.error("Error fetching documents:", err))
+    }
+  }, [backendStatus])
+
+  const handleUploadPDF = async (file) => {
+    if (!file) return
+    setIsUploading(true)
+    
+    const formData = new FormData()
+    formData.append('file', file)
+    
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/upload-pdf`, {
+        method: 'POST',
+        body: formData
+      })
+      
+      if (!response.ok) {
+        const errData = await response.json()
+        throw new Error(errData.detail || 'Failed to upload and index PDF')
+      }
+      
+      const data = await response.json()
+      
+      setDocuments(prev => {
+        if (!prev.includes(data.filename)) {
+          return [...prev, data.filename]
+        }
+        return prev
+      })
+      
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `upload-sys-${Date.now()}`,
+          role: 'assistant',
+          content: `📥 **Document Indexed Successfully!**\n\nUploaded **${data.filename}** (${data.page_count} pages, parsed into ${data.chunk_count} vector chunks). I can now answer questions using information from this document.`,
+          sources: []
+        }
+      ])
+      
+      return data
+    } catch (error) {
+      console.error("Upload error:", error)
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `upload-err-${Date.now()}`,
+          role: 'assistant',
+          content: `⚠️ **Upload Failed:** ${error.message}`,
+          sources: []
+        }
+      ])
+    } finally {
+      setIsUploading(false)
+    }
+  }
 
   const handleSend = async (textToSend) => {
     const queryText = textToSend || input
@@ -175,6 +243,9 @@ function App() {
         isSidebarOpen={isSidebarOpen} 
         setIsSidebarOpen={setIsSidebarOpen} 
         backendStatus={backendStatus} 
+        documents={documents}
+        onUploadPDF={handleUploadPDF}
+        isUploading={isUploading}
       />
 
       {/* MAIN CHAT INTERFACE CONTAINER */}

@@ -1,7 +1,29 @@
 import React from 'react'
-import { Sparkles, X, Server, HardDrive, Cpu, FileText, BookOpen, Terminal } from 'lucide-react'
+import { Sparkles, X, Server, HardDrive, Cpu, FileText, BookOpen, Terminal, UploadCloud, Loader2 } from 'lucide-react'
 
-export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, backendStatus }) {
+export default function Sidebar({ 
+  isSidebarOpen, 
+  setIsSidebarOpen, 
+  backendStatus,
+  documents = [],
+  onUploadPDF,
+  isUploading
+}) {
+  const fileInputRef = React.useRef(null)
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file && file.type === "application/pdf") {
+      onUploadPDF(file)
+    }
+  }
+
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }
+
   return (
     <div 
       className={`${
@@ -35,7 +57,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, backendStatus
       </div>
 
       {/* Engine Parameters Card */}
-      <div className="p-4 mx-4 my-4 rounded-2xl bg-[#0b1120] border border-white/[0.08] flex flex-col gap-3">
+      <div className="p-4 mx-4 my-4 rounded-2xl bg-[#0b1120] border border-white/[0.08] flex flex-col gap-3 shrink-0">
         <div className="flex items-center justify-between border-b border-white/[0.05] pb-2">
           <div className="flex items-center gap-2">
             <Server className="w-3.5 h-3.5 text-purple-400" />
@@ -71,40 +93,85 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, backendStatus
         </div>
       </div>
 
+      {/* Upload Document Widget */}
+      <div className="px-4 mb-4 shrink-0">
+        <div 
+          onClick={isUploading ? undefined : triggerFileInput}
+          className={`group relative p-4 rounded-2xl border border-dashed flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300 ${
+            isUploading 
+              ? 'border-purple-500/20 bg-purple-500/5 cursor-not-allowed animate-pulse' 
+              : 'border-white/[0.08] bg-slate-900/20 hover:border-purple-500/40 hover:bg-purple-500/[0.02]'
+          }`}
+        >
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleFileChange} 
+            accept=".pdf" 
+            className="hidden" 
+            disabled={isUploading}
+          />
+          {isUploading ? (
+            <div className="flex flex-col items-center gap-2 py-2">
+              <Loader2 className="w-6 h-6 text-purple-400 animate-spin" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-300">
+                Parsing & Indexing...
+              </span>
+              <p className="text-[9px] text-slate-500">Creating embeddings in Chroma DB</p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-1.5 py-1.5">
+              <div className="p-2 rounded-xl bg-slate-950/40 border border-white/[0.04] text-slate-400 group-hover:text-purple-400 group-hover:scale-105 transition-all">
+                <UploadCloud className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10.5px] font-bold text-slate-200 group-hover:text-purple-300 transition-colors">
+                  Upload PDF Document
+                </span>
+                <p className="text-[9px] text-slate-500 mt-0.5">Drag & drop or browse local files</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Knowledge Base Section */}
       <div className="flex-1 overflow-y-auto px-4 py-2">
         <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3.5 px-2">
           Knowledge Base
         </h3>
         
-        <div className="flex flex-col gap-3">
-          
-          {/* Doc Item 1 */}
-          <div className="p-3.5 rounded-2xl bg-[#0b1120] border border-white/[0.08] hover:border-purple-500/25 hover:shadow-lg hover:shadow-purple-500/[0.02] transition-all flex gap-3.5 items-start group cursor-pointer">
-            <div className="p-2 rounded-xl bg-purple-500/5 border border-purple-500/10 text-purple-400 group-hover:scale-105 transition-transform shrink-0">
-              <FileText className="w-4.5 h-4.5" />
+        <div className="flex flex-col gap-3 pb-6">
+          {documents.length === 0 ? (
+            <div className="p-6 rounded-2xl border border-white/[0.04] bg-slate-950/20 text-center flex flex-col items-center gap-2">
+              <FileText className="w-8 h-8 text-slate-600" />
+              <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
+                No custom PDFs uploaded.<br />Upload a file to begin academic assistance.
+              </p>
             </div>
-            <div>
-              <h4 className="text-xs font-bold text-slate-200 line-clamp-1 group-hover:text-purple-300 transition-colors">
-                AIML Syllabus
-              </h4>
-              <p className="text-[10px] text-slate-500 mt-1 font-medium">85 Pages • 342 Vector Chunks</p>
-            </div>
-          </div>
-
-          {/* Doc Item 2 */}
-          <div className="p-3.5 rounded-2xl bg-[#0b1120] border border-white/[0.08] hover:border-purple-500/25 hover:shadow-lg hover:shadow-purple-500/[0.02] transition-all flex gap-3.5 items-start group cursor-pointer">
-            <div className="p-2 rounded-xl bg-purple-500/5 border border-purple-500/10 text-purple-400 group-hover:scale-105 transition-transform shrink-0">
-              <BookOpen className="w-4.5 h-4.5" />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-slate-200 line-clamp-1 group-hover:text-purple-300 transition-colors">
-                Deep Learning Book
-              </h4>
-              <p className="text-[10px] text-slate-500 mt-1 font-medium">775 Pages • 4128 Vector Chunks</p>
-            </div>
-          </div>
-
+          ) : (
+            documents.map((doc, index) => {
+              const isBook = doc.toLowerCase().includes("book") || doc.toLowerCase().includes("syllabus") || doc.toLowerCase().includes("curriculum");
+              return (
+                <div 
+                  key={index}
+                  className="p-3.5 rounded-2xl bg-[#0b1120] border border-white/[0.08] hover:border-purple-500/25 hover:shadow-lg hover:shadow-purple-500/[0.02] transition-all flex gap-3.5 items-start group cursor-pointer"
+                >
+                  <div className="p-2 rounded-xl bg-purple-500/5 border border-purple-500/10 text-purple-400 group-hover:scale-105 transition-transform shrink-0">
+                    {isBook ? <BookOpen className="w-4.5 h-4.5" /> : <FileText className="w-4.5 h-4.5" />}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-xs font-bold text-slate-200 truncate group-hover:text-purple-300 transition-colors" title={doc}>
+                      {doc.replace(/\.[^/.]+$/, "")}
+                    </h4>
+                    <p className="text-[9px] font-mono text-slate-500 mt-1 uppercase tracking-wider">
+                      Active Index
+                    </p>
+                  </div>
+                </div>
+              )
+            })
+          )}
         </div>
       </div>
 
