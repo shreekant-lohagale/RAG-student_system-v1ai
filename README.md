@@ -60,8 +60,8 @@ If you want to use the console CLI interface:
 ---
 
 ## 🛠️ Technology Stack
-- **AI Core**: LangChain, Mistral AI (`mistral-small-latest`)
-- **Embeddings**: HuggingFace Sentence Transformers (`all-MiniLM-L6-v2` / default MPNet)
-- **Vector DB**: Chroma DB
-- **Backend API**: FastAPI, Uvicorn, Pydantic
-- **Frontend App**: React, TailwindCSS, Vite, Lucide Icons
+- **AI Core**: LangChain, Mistral AI (`mistral-small-latest`).
+- **Embeddings**: HuggingFace Sentence Transformers (`all-MiniLM-L6-v2` / default MPNet).
+- **Vector DB**: Chroma DB.
+- **Backend API**: FastAPI, Uvicorn, Pydantic.
+- **Frontend App**: React, TailwindCSS, Vite, Lucide Icons.
